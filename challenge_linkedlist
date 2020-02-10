@@ -1,0 +1,41 @@
+import requests
+import re
+
+URL = "http://www.pythonchallenge.com/pc/def/linkedlist.php?nothing=12345"
+
+proxy = {
+  "http":"127.0.0.1:8080"
+}
+
+temp=[0]
+res = requests.get(URL, proxies=proxy, verify=False)
+data = re.findall("[0-9]+", res.text, re.DOTALL)
+
+while 1 :
+	URL2 = "http://www.pythonchallenge.com/pc/def/linkedlist.php?nothing="+data[0]
+
+	temp[0] = data[0]
+	res = requests.get(URL2, proxies=proxy, verify=False)
+	data = re.findall("[0-9]+", res.text, re.DOTALL)
+
+	print(res.text)
+
+	if "nothing" not in res.text:
+		break
+
+temp[0] = str(int(temp[0])/2)
+
+while 1 :
+	
+	URL2 = "http://www.pythonchallenge.com/pc/def/linkedlist.php?nothing="+temp[0]
+
+	res = requests.get(URL2, proxies=proxy, verify=False)
+	temp = re.findall("[0-9]+", res.text, re.DOTALL)
+	if len(temp)>1:
+		temp[0] = temp[1]
+
+	print(res.text)
+
+	if "nothing" not in res.text:
+		print(res.text)
+		break
